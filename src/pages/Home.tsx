@@ -8,6 +8,7 @@ import Button from '../components/Button';
 import { useReactToPrint } from 'react-to-print';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useToast } from '../contexts/ToastContext';
 import { Prescription, createPrescription } from '../services/api';
 
 interface Medicine {
@@ -30,6 +31,7 @@ export default function Home() {
   const [note, setNote] = useState('');
   const prescriptionRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (location.state?.prescription) {
@@ -85,9 +87,9 @@ export default function Home() {
   const handleSave = async () => {
     try {
       await createPrescription({ patientData, medicines, note });
-      alert('Prescription saved successfully!');
+      addToast('Prescription saved successfully!', 'success');
     } catch (error) {
-      alert('Failed to save prescription');
+      addToast('Failed to save prescription', 'error');
     }
   };
 

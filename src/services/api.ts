@@ -17,8 +17,15 @@ export interface Prescription {
   note: string;
 }
 
-export const getPrescriptions = (): Promise<Prescription[]> =>
-  fetch(`${API_BASE}/prescriptions`).then(res => res.json());
+export const getPrescriptions = (params?: { search?: string; fromDate?: string; toDate?: string }): Promise<Prescription[]> => {
+  const url = new URL(`${API_BASE}/prescriptions`);
+  if (params) {
+    if (params.search) url.searchParams.append('search', params.search);
+    if (params.fromDate) url.searchParams.append('fromDate', params.fromDate);
+    if (params.toDate) url.searchParams.append('toDate', params.toDate);
+  }
+  return fetch(url.toString()).then(res => res.json());
+};
 
 export const getPrescription = (id: string): Promise<Prescription> =>
   fetch(`${API_BASE}/prescriptions/${id}`).then(res => res.json());

@@ -4,22 +4,30 @@ import PrescriptionsList from '../components/PrescriptionsList';
 import PrescriptionPreview from '../components/PrescriptionPreview';
 import Modal from '../components/Modal';
 import { useReactToPrint } from 'react-to-print';
+import { useToast } from '../contexts/ToastContext';
 import { Prescription, getPrescriptions, deletePrescription } from '../services/api';
 
 export default function PrescriptionsPage() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [printPrescription, setPrintPrescription] = useState<Prescription | null>(null);
   const [previewPrescription, setPreviewPrescription] = useState<Prescription | null>(null);
+  const [search, setSearch] = useState('');
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [inputSearch, setInputSearch] = useState('');
+  const [inputFromDate, setInputFromDate] = useState('');
+  const [inputToDate, setInputToDate] = useState('');
   const prescriptionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { addToast } = useToast();
 
   const handleActualPrint = useReactToPrint({
     contentRef: prescriptionRef,
   });
 
   useEffect(() => {
-    getPrescriptions().then(setPrescriptions).catch(console.error);
-  }, []);
+    getPrescriptions({ search, fromDate, toDate }).then(setPrescriptions).catch(console.error);
+  }, [search, fromDate, toDate]);
 
   const handleLoad = (prescription: Prescription) => {
     navigate('/', { state: { prescription } });
@@ -29,8 +37,9 @@ export default function PrescriptionsPage() {
     try {
       await deletePrescription(id);
       setPrescriptions(prescriptions.filter(p => p._id !== id));
+      addToast('Prescription deleted successfully', 'success');
     } catch (error) {
-      alert('Failed to delete prescription');
+      addToast('Failed to delete prescription', 'error');
     }
   };
 
@@ -50,6 +59,20 @@ export default function PrescriptionsPage() {
     setPreviewPrescription(null);
   };
 
+  const handleFilterClick = () => {
+    setSearch(inputSearch);
+    setFromDate(inputFromDate);
+    setToDate(inputToDate);
+  };
+
+  const handleResetClick = () => {
+    setInputSearch('');
+    setInputFromDate('');
+    setInputToDate('');
+    setSearch('');
+    setFromDate('');
+    setToDate('');
+  };
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -66,6 +89,14 @@ export default function PrescriptionsPage() {
           onDelete={handleDelete}
           onPrint={handlePrint}
           onPreview={handlePreview}
+          search={inputSearch}
+          fromDate={inputFromDate}
+          toDate={inputToDate}
+          onSearchChange={setInputSearch}
+          onFromDateChange={setInputFromDate}
+          onToDateChange={setInputToDate}
+          onFilterClick={handleFilterClick}
+          onResetClick={handleResetClick}
         />
       </main>
       <Modal open={!!printPrescription} onClose={handleClosePrint}>
