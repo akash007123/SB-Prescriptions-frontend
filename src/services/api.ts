@@ -24,25 +24,37 @@ export const getPrescriptions = (params?: { search?: string; fromDate?: string; 
     if (params.fromDate) url.searchParams.append('fromDate', params.fromDate);
     if (params.toDate) url.searchParams.append('toDate', params.toDate);
   }
-  return fetch(url.toString()).then(res => res.json());
+  return fetch(url.toString()).then(res => {
+    if (!res.ok) throw new Error('Failed to fetch prescriptions');
+    return res.json();
+  });
 };
 
 export const getPrescription = (id: string): Promise<Prescription> =>
-  fetch(`${API_BASE}/prescriptions/${id}`).then(res => res.json());
+  fetch(`${API_BASE}/prescriptions/${id}`).then(res => {
+    if (!res.ok) throw new Error('Failed to fetch prescription');
+    return res.json();
+  });
 
 export const createPrescription = (data: Omit<Prescription, '_id'>): Promise<Prescription> =>
   fetch(`${API_BASE}/prescriptions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
-  }).then(res => res.json());
+  }).then(res => {
+    if (!res.ok) throw new Error('Failed to create prescription');
+    return res.json();
+  });
 
 export const updatePrescription = (id: string, data: Omit<Prescription, '_id'>): Promise<Prescription> =>
   fetch(`${API_BASE}/prescriptions/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
-  }).then(res => res.json());
+  }).then(res => {
+    if (!res.ok) throw new Error('Failed to update prescription');
+    return res.json();
+  });
 
 export const deletePrescription = (id: string): Promise<void> =>
   fetch(`${API_BASE}/prescriptions/${id}`, {

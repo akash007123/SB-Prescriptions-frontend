@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Prescription } from '../services/api';
 import Button from './Button';
+import Modal from './Modal';
 import {
   Eye,
   Printer,
   Trash2,
   FileText,
   Calendar,
-  User,
   Download,
   Search,
   Filter,
@@ -49,7 +49,16 @@ export default function PrescriptionsList({
   onFilterClick,
   onResetClick
 }: PrescriptionsListProps) {
-  
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [prescriptionToDelete, setPrescriptionToDelete] = useState<Prescription | null>(null);
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('');
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -174,7 +183,9 @@ export default function PrescriptionsList({
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                        <User className="h-5 w-5 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-600">
+                          {getInitials(prescription.patientData.name)}
+                        </span>
                       </div>
                       <div>
                         <div className="font-medium text-gray-900">
@@ -242,7 +253,10 @@ export default function PrescriptionsList({
                       </Button>
                       
                       <Button
-                        onClick={() => onDelete(prescription._id)}
+                        onClick={() => {
+                          setPrescriptionToDelete(prescription);
+                          setDeleteModalOpen(true);
+                        }}
                         variant="ghost"
                         className="text-gray-600 hover:text-red-600 hover:bg-red-50"
                         title="Delete"
@@ -278,6 +292,33 @@ export default function PrescriptionsList({
           </div>
         </div>
       )}
+
+      <Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">Confirm Delete</h2>
+          <p className="text-gray-700 mb-6">
+            Are you sure you want to delete the prescription for{' '}
+            <span className="font-medium">{prescriptionToDelete?.patientData.name}</span>?
+            This action cannot be undone.
+          </p>
+          <div className="flex gap-4 justify-end">
+            <Button onClick={() => setDeleteModalOpen(false)} variant="ghost">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                if (prescriptionToDelete) {
+                  onDelete(prescriptionToDelete._id);
+                }
+                setDeleteModalOpen(false);
+              }}
+              className="bg-red-600 text-white hover:bg-red-700 focus:ring-red-500"
+            >
+              Delete Prescription
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

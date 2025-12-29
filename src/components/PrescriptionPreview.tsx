@@ -58,7 +58,7 @@ const PrescriptionPreview = forwardRef<HTMLDivElement, PrescriptionPreviewProps>
         {/* Body */}
         <div className="mb-6 flex-grow">
           <div className="grid grid-cols-1">
-            <div className="text-lg">{patientData.name}</div>
+            <div className="text-lg"><strong>{patientData.name}</strong></div>
             <div>
               <strong>Age:</strong> {patientData.age}
             </div>
@@ -72,6 +72,7 @@ const PrescriptionPreview = forwardRef<HTMLDivElement, PrescriptionPreviewProps>
           </div>
 
           <div className="mt-5">
+            <img src="./rx.png" className='w-10' alt="" />
             <strong>Medicines:</strong>
             <ul className="mt-2 ml-5 space-y-1 list-disc">
               {medicines
@@ -98,6 +99,10 @@ const PrescriptionPreview = forwardRef<HTMLDivElement, PrescriptionPreviewProps>
             <p className="font-semibold">Dr Shashank Bhargava</p>
             <p className="text-sm">MBBS, MD, FAHRS</p>
             <p className="text-sm">Reg. No. MP 19579</p>
+          </div>
+          <div>
+            <p className="font-semibold text-orange-500">Made by Sosapient</p>
+            <p className="text-sm">www.sosapient.in</p>
           </div>
         </div>
       </div>
