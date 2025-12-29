@@ -18,11 +18,16 @@ export default function PrescriptionsPage() {
   const [inputFromDate, setInputFromDate] = useState('');
   const [inputToDate, setInputToDate] = useState('');
   const prescriptionRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { addToast } = useToast();
 
   const handleActualPrint = useReactToPrint({
     contentRef: prescriptionRef,
+  });
+
+  const handlePreviewPrint = useReactToPrint({
+    contentRef: previewRef,
   });
 
   useEffect(() => {
@@ -120,8 +125,14 @@ export default function PrescriptionsPage() {
       <Modal open={!!previewPrescription} onClose={handleClosePreview}>
         {previewPrescription && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Preview Prescription</h2>
+            <div className="flex justify-between items-center mb-4">
+              {/* <h2 className="text-xl font-semibold">Preview Prescription</h2> */}
+              <button onClick={handlePreviewPrint} className="bg-orange-500 text-white px-4 py-2 ml-10 mt-5 rounded hover:bg-orange-600">
+                Print
+              </button>
+            </div>
             <PrescriptionPreview
+              ref={previewRef}
               patientData={previewPrescription.patientData}
               medicines={previewPrescription.medicines}
               note={previewPrescription.note}

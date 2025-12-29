@@ -113,7 +113,7 @@ export default function Home() {
                 placeholder="Enter any additional notes"
               />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Button onClick={handleSave} variant="primary">
                 Save Prescription
               </Button>

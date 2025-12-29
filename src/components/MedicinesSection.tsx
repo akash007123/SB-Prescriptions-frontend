@@ -41,7 +41,7 @@ export default function MedicinesSection({ onChange }: MedicinesSectionProps) {
     <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-6">
       <h2 className="text-xl font-semibold mb-4 text-blue-900">Medicines</h2>
       {medicines.map((medicine, index) => (
-        <div key={medicine.id} className="flex items-center gap-4 mb-4">
+        <div key={medicine.id} className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-blue-800 mb-1">
               Medicine {index + 1}
@@ -66,11 +66,11 @@ export default function MedicinesSection({ onChange }: MedicinesSectionProps) {
               placeholder="Enter dose"
             />
           </div>
-          <div className="pt-6">
+          <div className="sm:pt-6">
             <Button
               variant="ghost"
               onClick={() => removeMedicine(medicine.id)}
-              className="text-red-600 hover:text-red-800"
+              className="text-red-600 hover:text-red-800 w-full sm:w-auto"
             >
               Remove
             </Button>
