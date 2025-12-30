@@ -6,7 +6,7 @@ const ToastItem: React.FC<{ toast: Toast; onClose: (id: string) => void }> = ({ 
   const getIcon = () => {
     switch (toast.type) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-blue-500" />;
       case 'error':
         return <XCircle className="h-5 w-5 text-red-500" />;
       case 'info':

@@ -214,14 +214,14 @@ export default function PrescriptionsList({
                       <Download className="h-4 w-4" />
                     </Button>
                   )}
-                  <Button
+                  {/* <Button
                     onClick={() => onPrint(prescription)}
                     variant="ghost"
                     className="text-gray-600 hover:text-orange-600 hover:bg-orange-50 p-2"
                     title="Print"
                   >
                     <Printer className="h-4 w-4" />
-                  </Button>
+                  </Button> */}
                   <Button
                     onClick={() => {
                       setPrescriptionToDelete(prescription);
@@ -325,14 +325,14 @@ export default function PrescriptionsList({
                             </Button>
                           )}
 
-                          <Button
+                          {/* <Button
                             onClick={() => onPrint(prescription)}
                             variant="ghost"
                             className="text-gray-600 hover:text-orange-600 hover:bg-orange-50"
                             title="Print"
                           >
                             <Printer className="h-4 w-4" />
-                          </Button>
+                          </Button> */}
 
                           <Button
                             onClick={() => {

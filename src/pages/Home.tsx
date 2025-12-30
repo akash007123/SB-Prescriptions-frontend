@@ -6,8 +6,7 @@ import MedicinesSection from '../components/MedicinesSection';
 import PrescriptionPreview from '../components/PrescriptionPreview';
 import Button from '../components/Button';
 import { useReactToPrint } from 'react-to-print';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2pdf from 'html2pdf.js';
 import { useToast } from '../contexts/ToastContext';
 import { Prescription, createPrescription } from '../services/api';
 
@@ -29,6 +28,7 @@ export default function Home() {
     { id: 1, name: '', dose: '' },
   ]);
   const [note, setNote] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const prescriptionRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { addToast } = useToast();
@@ -46,29 +46,18 @@ export default function Home() {
     contentRef: prescriptionRef,
   });
 
-  const handleDownloadPDF = async () => {
+  const handleDownloadPDF = () => {
     if (prescriptionRef.current) {
-      const canvas = await html2canvas(prescriptionRef.current);
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF();
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 295; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-
-      let position = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save('prescription.pdf');
+      const opt = {
+        margin: 0,
+        filename: 'prescription.pdf',
+        image: { type: 'jpeg' as const, quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in' as const, format: 'a4' as const, orientation: 'portrait' as const },
+        cssMediaType: 'print' as const,
+        pagebreak: { mode: 'avoid-all' as const }
+      };
+      html2pdf().set(opt).from(prescriptionRef.current).save();
     }
   };
 
@@ -85,11 +74,14 @@ export default function Home() {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
       await createPrescription({ patientData, medicines, note });
       addToast('Prescription saved successfully!', 'success');
     } catch (error) {
       addToast('Failed to save prescription', 'error');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -114,12 +106,12 @@ export default function Home() {
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button onClick={handleSave} variant="primary">
-                Save Prescription
+              <Button onClick={handleSave} variant="primary" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save Prescription'}
               </Button>
-              <Button onClick={handleDownloadPDF}>
+              {/* <Button onClick={handleDownloadPDF}>
                 Download PDF
-              </Button>
+              </Button> */}
               <Button onClick={handlePrint}>
                 Print
               </Button>
@@ -138,8 +130,10 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-6 text-center">
-          <Link to="/prescriptions" className="text-blue-600 hover:underline">
-            View Saved Prescriptions
+          <Link to="/prescriptions">
+            <Button variant="primary">
+              View Saved Prescriptions
+            </Button>
           </Link>
         </div>
       </main>
