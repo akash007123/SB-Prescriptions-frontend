@@ -92,15 +92,19 @@ const PrescriptionPreview = forwardRef<
           <div className="text-lg">
             <strong>{patientData.name}</strong>
           </div>
-          <div>
-            <strong>Age:</strong> {patientData.age}
-          </div>
+          {patientData.age && (
+            <div>
+              <strong>Age:</strong> {patientData.age}
+            </div>
+          )}
           <div>
             <strong>Gender:</strong> {patientData.gender}
           </div>
-          <div>
-            <strong>Place:</strong> {patientData.place}
-          </div>
+          {patientData.place && (
+            <div>
+              <strong>Place:</strong> {patientData.place}
+            </div>
+          )}
         </div>
 
         <div>
@@ -133,6 +137,7 @@ const PrescriptionPreview = forwardRef<
       {/* Footer */}
       <div className="flex justify-between items-end border-t-[7px] border-blue-600 pt-4">
         <div>
+          <img src="./signature.png" className="w-20" alt="" />
           <p className="font-semibold">Dr Shashank Bhargava</p>
           <p className="text-sm">MBBS, MD, FAHRS</p>
           <p className="text-sm">Reg. No. MP 19579</p>
