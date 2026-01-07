@@ -39,7 +39,10 @@ export default function Home() {
   useEffect(() => {
     if (location.state?.prescription) {
       const prescription: Prescription = location.state.prescription;
-      setPatientData(prescription.patientData);
+      setPatientData({
+        ...prescription.patientData,
+        date: new Date().toISOString().split('T')[0]
+      });
       setMedicines(prescription.medicines);
       setNote(prescription.note);
       setEditingId(prescription._id);
