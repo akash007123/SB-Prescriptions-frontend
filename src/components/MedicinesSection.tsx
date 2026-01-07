@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from './Button';
 
 interface Medicine {
@@ -8,24 +8,19 @@ interface Medicine {
 }
 
 interface MedicinesSectionProps {
+  medicines: Medicine[];
   onChange: (medicines: Medicine[]) => void;
 }
 
-export default function MedicinesSection({ onChange }: MedicinesSectionProps) {
-  const [medicines, setMedicines] = useState<Medicine[]>([
-    { id: 1, name: '', dose: '' },
-  ]);
-
+export default function MedicinesSection({ medicines, onChange }: MedicinesSectionProps) {
   const addMedicine = () => {
-    const newId = Math.max(...medicines.map(m => m.id)) + 1;
+    const newId = medicines.length > 0 ? Math.max(...medicines.map(m => m.id)) + 1 : 1;
     const newMedicines = [...medicines, { id: newId, name: '', dose: '' }];
-    setMedicines(newMedicines);
     onChange(newMedicines);
   };
 
   const removeMedicine = (id: number) => {
     const newMedicines = medicines.filter(m => m.id !== id);
-    setMedicines(newMedicines);
     onChange(newMedicines);
   };
 
@@ -33,7 +28,6 @@ export default function MedicinesSection({ onChange }: MedicinesSectionProps) {
     const newMedicines = medicines.map(m =>
       m.id === id ? { ...m, [field]: value } : m
     );
-    setMedicines(newMedicines);
     onChange(newMedicines);
   };
 

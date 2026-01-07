@@ -91,8 +91,8 @@ export default function Home() {
       <main className="container mx-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div>
-            <PatientForm onChange={setPatientData} />
-            <MedicinesSection onChange={setMedicines} />
+            <PatientForm patientData={patientData} onChange={setPatientData} />
+            <MedicinesSection medicines={medicines} onChange={setMedicines} />
             <div className="bg-blue-50 p-6 rounded-lg shadow-md mb-6">
               <label className="block text-sm font-medium text-blue-800 mb-1">
                 Note (Optional)

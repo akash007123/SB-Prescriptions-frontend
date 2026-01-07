@@ -42,7 +42,7 @@ const PrescriptionPreview = forwardRef<
             {/* Logo */}
             <div className=" rounded-lg p-2 w-20 h-20 flex items-center justify-center">
               <img
-                src="./logo.png"
+                src="/logo.png"
                 alt="Clinic Logo"
                 className="w-15 h-15 object-contain"
               />
@@ -97,6 +97,9 @@ const PrescriptionPreview = forwardRef<
           </div>
           <div>
             <strong>Gender:</strong> {patientData.gender}
+          </div>
+          <div>
+            <strong>Place:</strong> {patientData.place}
           </div>
         </div>
 

@@ -249,6 +249,9 @@ export default function PrescriptionsList({
                       Diagnosis
                     </th>
                     <th className="text-left py-4 px-6 text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                      Place
+                    </th>
+                    <th className="text-left py-4 px-6 text-xs font-semibold text-gray-700 uppercase tracking-wider">
                       Date
                     </th>
                     <th className="text-left py-4 px-6 text-xs font-semibold text-gray-700 uppercase tracking-wider">
@@ -285,6 +288,13 @@ export default function PrescriptionsList({
                         <div className="max-w-xs">
                           <p className="text-gray-900 font-medium truncate">
                             {prescription.patientData.diagnosis}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="max-w-xs">
+                          <p className="text-gray-900 font-medium truncate">
+                            {prescription.patientData.place || '_'}
                           </p>
                         </div>
                       </td>

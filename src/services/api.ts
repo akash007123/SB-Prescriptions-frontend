@@ -8,6 +8,7 @@ export interface Prescription {
     gender: string;
     diagnosis: string;
     date: string;
+    place: string;
   };
   medicines: {
     id: number;

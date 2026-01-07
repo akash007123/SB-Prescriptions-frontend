@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface PatientFormProps {
+  patientData: PatientData;
   onChange: (data: PatientData) => void;
 }
 
@@ -10,20 +11,12 @@ export interface PatientData {
   gender: string;
   diagnosis: string;
   date: string;
+  place: string;
 }
 
-export default function PatientForm({ onChange }: PatientFormProps) {
-  const [data, setData] = useState<PatientData>({
-    name: '',
-    age: '',
-    gender: 'Male',
-    diagnosis: '',
-    date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
-  });
-
+export default function PatientForm({ patientData, onChange }: PatientFormProps) {
   const handleChange = (field: keyof PatientData, value: string) => {
-    const newData = { ...data, [field]: value };
-    setData(newData);
+    const newData = { ...patientData, [field]: value };
     onChange(newData);
   };
 
@@ -37,7 +30,7 @@ export default function PatientForm({ onChange }: PatientFormProps) {
           </label>
           <input
             type="text"
-            value={data.name}
+            value={patientData.name}
             onChange={(e) => handleChange('name', e.target.value)}
             className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             placeholder="Enter patient name"
@@ -49,7 +42,7 @@ export default function PatientForm({ onChange }: PatientFormProps) {
           </label>
           <input
             type="number"
-            value={data.age}
+            value={patientData.age}
             onChange={(e) => handleChange('age', e.target.value)}
             className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             placeholder="Enter age"
@@ -60,7 +53,7 @@ export default function PatientForm({ onChange }: PatientFormProps) {
             Gender
           </label>
           <select
-            value={data.gender}
+            value={patientData.gender}
             onChange={(e) => handleChange('gender', e.target.value)}
             className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           >
@@ -75,8 +68,19 @@ export default function PatientForm({ onChange }: PatientFormProps) {
           </label>
           <input
             type="date"
-            value={data.date}
+            value={patientData.date}
             onChange={(e) => handleChange('date', e.target.value)}
+            className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-blue-800 mb-1">
+            Place
+          </label>
+          <input
+            type="text"
+            value={patientData.place}
+            onChange={(e) => handleChange('place', e.target.value)}
             className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           />
         </div>
@@ -86,7 +90,7 @@ export default function PatientForm({ onChange }: PatientFormProps) {
           Diagnosis
         </label>
         <textarea
-          value={data.diagnosis}
+          value={patientData.diagnosis}
           onChange={(e) => handleChange('diagnosis', e.target.value)}
           rows={3}
           className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
