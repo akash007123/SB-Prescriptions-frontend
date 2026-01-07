@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import PatientForm, { PatientData } from '../components/PatientForm';
 import MedicinesSection from '../components/MedicinesSection';
@@ -8,7 +8,7 @@ import Button from '../components/Button';
 import { useReactToPrint } from 'react-to-print';
 import html2pdf from 'html2pdf.js';
 import { useToast } from '../contexts/ToastContext';
-import { Prescription, createPrescription } from '../services/api';
+import { Prescription, createPrescription, updatePrescription } from '../services/api';
 
 interface Medicine {
   id: number;
@@ -23,14 +23,17 @@ export default function Home() {
     gender: 'Male',
     diagnosis: '',
     date: new Date().toISOString().split('T')[0],
+    place: '',
   });
   const [medicines, setMedicines] = useState<Medicine[]>([
     { id: 1, name: '', dose: '' },
   ]);
   const [note, setNote] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const prescriptionRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const { addToast } = useToast();
 
   useEffect(() => {
@@ -39,6 +42,9 @@ export default function Home() {
       setPatientData(prescription.patientData);
       setMedicines(prescription.medicines);
       setNote(prescription.note);
+      setEditingId(prescription._id);
+    } else {
+      setEditingId(null);
     }
   }, [location.state]);
 
@@ -68,16 +74,24 @@ export default function Home() {
       gender: 'Male',
       diagnosis: '',
       date: new Date().toISOString().split('T')[0],
+      place: '',
     });
     setMedicines([{ id: 1, name: '', dose: '' }]);
     setNote('');
+    setEditingId(null);
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await createPrescription({ patientData, medicines, note });
-      addToast('Prescription saved successfully!', 'success');
+      if (editingId) {
+        await updatePrescription(editingId, { patientData, medicines, note });
+        addToast('Prescription updated successfully!', 'success');
+        navigate('/prescriptions');
+      } else {
+        await createPrescription({ patientData, medicines, note });
+        addToast('Prescription saved successfully!', 'success');
+      }
     } catch (error) {
       addToast('Failed to save prescription', 'error');
     } finally {
@@ -107,7 +121,7 @@ export default function Home() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button onClick={handleSave} variant="primary" disabled={isSaving}>
-                {isSaving ? 'Saving...' : 'Save Prescription'}
+                {isSaving ? 'Saving...' : editingId ? 'Update Prescription' : 'Save Prescription'}
               </Button>
               {/* <Button onClick={handleDownloadPDF}>
                 Download PDF

@@ -11,12 +11,14 @@ import {
   Download,
   Search,
   Filter,
-  RotateCcw
+  RotateCcw,
+  Edit
 } from 'lucide-react';
 
 interface PrescriptionsListProps {
   prescriptions: Prescription[];
   onLoad: (prescription: Prescription) => void;
+  onEdit: (prescription: Prescription) => void;
   onDelete: (id: string) => void;
   onPrint: (prescription: Prescription) => void;
   onPreview: (prescription: Prescription) => void;
@@ -35,6 +37,7 @@ interface PrescriptionsListProps {
 export default function PrescriptionsList({
   prescriptions,
   onLoad,
+  onEdit,
   onDelete,
   onPrint,
   onPreview,
@@ -204,6 +207,14 @@ export default function PrescriptionsList({
                   >
                     <FileText className="h-4 w-4" />
                   </Button>
+                  <Button
+                    onClick={() => onEdit(prescription)}
+                    variant="ghost"
+                    className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 p-2"
+                    title="Edit"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
                   {onDownload && (
                     <Button
                       onClick={() => onDownload(prescription)}
@@ -322,6 +333,15 @@ export default function PrescriptionsList({
                             title="View Details"
                           >
                             <FileText className="h-4 w-4" />
+                          </Button>
+
+                          <Button
+                            onClick={() => onEdit(prescription)}
+                            variant="ghost"
+                            className="text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                            title="Edit"
+                          >
+                            <Edit className="h-4 w-4" />
                           </Button>
 
                           {onDownload && (

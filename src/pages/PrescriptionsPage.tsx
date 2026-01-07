@@ -91,6 +91,7 @@ export default function PrescriptionsPage() {
         <PrescriptionsList
           prescriptions={prescriptions}
           onLoad={handleLoad}
+          onEdit={handleLoad}
           onDelete={handleDelete}
           onPrint={handlePrint}
           onPreview={handlePreview}
